@@ -1,0 +1,1784 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="description" content="verkassi is a one-page dashboard of simple tools. No ads, no tracking, no signup, no BS. You can also generate small or large amounts of pseudodata with DataSmith!">
+    <meta name="keywords" content="remove duplicates, complementary color, table converter, date difference, comma to line break, lorem ipsum, random number, word count, character count, toolkit, utilities, pseudodata, synthetic data">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>verkassi</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+
+<!-- font awesome -->
+
+<script src="https://kit.fontawesome.com/27725c9f53.js" crossorigin="anonymous"></script>
+
+    <style>
+/* slider toggle */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+  margin-top: 10px;
+}
+
+.switch input { 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+ 
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+  content: "\f186";
+  font-size: 18px; 
+  color: #444;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* remainder */
+      body {
+        background-color: #02529C;
+        padding-top: 300px;
+        margin-left: 0;
+        margin-top: 100px;
+        margin-bottom: 40px;
+      }
+
+      .header-bar {
+     position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+
+        width: 100%;
+        background-color: #DC1E35;
+        display: block;
+        text-shadow: #000 1px 0 10px;
+      }
+
+      .fancy {
+        font-family: georgia;
+        font-size: 2.5em;
+        text-shadow: #000 1px 0 10px;
+      }
+
+      .fancy2 {
+        font-family: georgia;
+        font-size: 1.5em;
+        text-shadow: #000 1px 0 10px;
+      }
+
+      .row::after {
+        content: "";
+        clear: both;
+        display: table;
+      }
+
+      .column {
+        float: left;
+        width: 100%;
+        padding: 15px;
+        box-sizing: border-box;
+      }
+
+      .tile {
+        border: 1px solid #fff;
+        border-radius: 5px;
+        padding: 15px;
+        height: auto;
+		min-height: 500px;
+		display: grid;
+      }
+
+      @media screen and (min-width: 576px) {
+        .column {
+          width: 50%;
+        }
+      }
+
+      @media screen and (min-width: 768px) {
+        .column {
+          width: 33.33%;
+
+        }
+      }
+
+@media screen and (max-width: 768px) {
+  .header-bar {
+    position: absolute; /* Makes it scroll with the page on mobile */
+  }
+	  
+	        /* Dark mode styling for text input areas only */
+      .dark-mode textarea,
+      .dark-mode input[type="text"],
+      .dark-mode input[type="number"],
+      .dark-mode input[type="date"] {
+        background-color: #333;
+        color: white;
+      }
+ 
+  /* Dark mode styling for specific areas and components */
+  .dark-mode textarea,
+   
+  .dark-mode input[type="text"],
+  .dark-mode input[type="number"],
+  .dark-mode input[type="date"],
+  .dark-mode select {
+    background-color: #333;
+    color: #fff;
+  }
+
+.dark-mode .AClabel, 
+.dark-mode select {
+  background-color: #444;
+  color: white;
+}
+  .dark-mode .calculator,
+  .dark-mode .area-calculator {
+    background-color: #444; /* Darker background for calculators */
+  
+  }
+  .dark-mode .display {
+    background-color: #333; /* Match display to text field color */
+    color: white;
+  }
+  .dark-mode input[type="checkbox"] {
+    filter: invert(1); /* Change checkbox appearance */
+  }
+</style>
+
+
+  <script>
+  document.addEventListener("DOMContentLoaded", function() {
+    // Default paragraph in Lorem Ipsum Generator without duplication
+    const loremText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed et ante euismod, rhoncus mauris non, facilisis mauris. Praesent in tellus risus. Ut euismod sapien eu tincidunt efficitur.";
+    const loremContainer = document.querySelector("#text");
+    let loremInitialized = false;
+    if (loremContainer && loremContainer.children.length === 0) { // Ensure no duplication
+      const defaultPara = document.createElement("p");
+      defaultPara.textContent = loremText;
+      loremContainer.appendChild(defaultPara);
+      loremInitialized = true; // Mark initialized state
+    }
+
+    const generateBtn = document.querySelector("#generateBtn");
+    const clearBtn = document.querySelector("#clearBtn");
+    let count = loremInitialized ? 1 : 0; // Start count based on initialization
+
+    if (generateBtn && loremContainer) {
+      generateBtn.addEventListener("click", () => {
+        if (count >= 5) {
+          return;
+        }
+        const paragraph = ["Lorem ipsum dolor sit amet, consectetur adipiscing elit.", "Donec sit amet semper velit. Nulla tincidunt luctus porttitor.", "Etiam vestibulum luctus urna eu mollis.", "Praesent consequat turpis a risus elementum vestibulum.", "Curabitur posuere ante non lacus consectetur."][count];
+        const p = document.createElement("p");
+        p.textContent = paragraph;
+        loremContainer.appendChild(p);
+        count++;
+        clearBtn.style.display = "inline";
+      });
+    }
+
+    // Dark mode toggle for relevant elements
+    const darkModeToggle = document.querySelector(".switch input");
+    darkModeToggle.addEventListener("change", function() {
+      document.body.classList.toggle("dark-mode", darkModeToggle.checked);
+    });
+  });
+</script>
+
+    </head>
+    
+  <body>
+    <div class="header-bar">
+      <h1 class="fancy">verkassi</h1>
+      <img src="iceland.png" alt="Iceland flag" width="32">
+      <br>/vɛr̥k/ & /ˈkʰasːɪ/ <br>("toolbox") <h3>No ads, no tracking, no signup, no BS.<br></h3>Need to generate pseudodata? Check out <a href="datasmith.html" class="dslink" target="_blank">DataSmith!</a><br>
+
+<label class="switch">
+  <input type="checkbox">
+  <span class="slider round"></span>
+</label>
+
+</h3>
+    </div>
+    <div class="row">
+      <div class="column">
+        <!-- Tile 1: Insert HTML content here -->
+        <div class="tile">
+         
+              <style>
+                body {
+                  background-color: #02529C;
+                }
+                .dslink:hover {
+                   color: white;
+                }
+
+                .calculator {
+                  width: 240px;
+                  background-color: #e6e6e6;
+                  border-radius: 5px;
+                  padding: 10px;
+                  margin: auto;
+                  font-family: open sans;
+                }
+
+                .input-group {
+                  margin: 10px;
+                }
+
+                .label {
+                  display: block;
+                  margin-bottom: 5px;
+                  color: black;
+                }
+
+                .input {
+                  width: 100%;
+                  padding: 5px;
+                  border-radius: 3px;
+                  border: 1px solid #ccc;
+                }
+
+                .buttonAC {
+                  background-color: #DC1E35;
+                  color: white;
+                  padding: 10px 20px;
+                  border: none;
+                  border-radius: 4px;
+                  cursor: pointer;
+                }
+
+                .button:hover {
+                  background-color: #ddd;
+                }
+
+                .button:active {
+                  background-color: #bbb;
+                }
+
+                .result {
+                  margin-top: -10px;
+                  font-weight: bold;
+                }
+
+                h1 {
+                  font-family: open sans;
+                  text-align: center;
+                  color: white;
+                  text-shadow: #000 1px 0 10px;
+                }
+
+                h2 {
+                  font-family: open sans;
+                  text-align: center;
+                  color: white;
+              </style>
+            
+    <style>
+      /* Dark mode styling for text input areas only */
+      .dark-mode textarea,
+      .dark-mode input[type="text"],
+      .dark-mode input[type="number"],
+      .dark-mode input[type="date"] {
+        background-color: #333;
+        color: white;
+      }
+    </style>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        // Default paragraph in Lorem Ipsum Generator (no duplication)
+        const loremText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed et ante euismod, rhoncus mauris non, facilisis mauris. Praesent in tellus risus. Ut euismod sapien eu tincidunt efficitur.";
+        const loremContainer = document.querySelector("#text");
+        if (loremContainer && loremContainer.children.length === 0) { // Ensure no duplication
+          const defaultPara = document.createElement("p");
+          defaultPara.textContent = loremText;
+          loremContainer.appendChild(defaultPara);
+        }
+
+        // Dark mode toggle for text input areas only
+        const darkModeToggle = document.querySelector(".switch input");
+        darkModeToggle.addEventListener("change", function() {
+          document.body.classList.toggle("dark-mode", darkModeToggle.checked);
+        });
+      });
+    </script>
+    </head>
+    
+            <body>
+              <h1>Area Calculator</h1>
+              <div class="calculator">
+                <div class="input-group">
+                  <label class="AClabel">Radius of Circle:</label>
+                  <input class="input" type="number" id="radius" step="0.01">
+                  <button class="buttonAC" onclick="calculateCircleArea()">Calculate Circle</button>
+                  <div class="result" style="color:black;" id="circleResult"></div>
+                </div>
+                <div class="input-group">
+                  <label class="AClabel">Length of Rectangle:</label>
+                  <input class="input" type="number" id="length" step="0.01">
+                </div>
+                <div class="input-group">
+                  <label class="AClabel">Width of Rectangle:</label>
+                  <input class="input" type="number" id="width" step="0.01">
+                  <button class="buttonAC" onclick="calculateRectangleArea()">Calculate Rectangle</button>
+                  <div class="result" style="color:black;" id="rectangleResult"></div>
+                </div>
+              </div>
+              <script>
+                function calculateCircleArea() {
+                  let radius = document.getElementById('radius').value;
+                  let circleResult = document.getElementById('circleResult');
+                  let areaCircle = 0;
+                  if (radius !== '') {
+                    areaCircle = Math.PI * Math.pow(radius, 2);
+                  }
+                  circleResult.textContent = `Area of Circle: ${areaCircle.toFixed(2)}`;
+                }
+
+                function calculateRectangleArea() {
+                  let length = document.getElementById('length').value;
+                  let width = document.getElementById('width').value;
+                  let rectangleResult = document.getElementById('rectangleResult');
+                  let areaRectangle = 0;
+                  if (length !== '' && width !== '') {
+                    areaRectangle = length * width;
+                  }
+                  rectangleResult.textContent = `Area of Rectangle: ${areaRectangle.toFixed(2)}`;
+                }
+              </script>
+            </body>
+          
+        </div>
+      </div>
+      <div class="column">
+        <!-- Tile 2: Insert HTML content here -->
+        <div class="tile">
+         
+              <style>
+                body {
+                  background-color: #02529C;
+                }
+
+                .calculator {
+                  width: 240px;
+                  background-color: #e6e6e6;
+                  border-radius: 5px;
+                  padding: 10px;
+                  font-family: open sans;
+                  color: black;
+                }
+
+                .display {
+                  height: 40px;
+                  background-color: #fff;
+                  text-align: right;
+                  padding: 5px;
+                  margin-bottom: 10px;
+                }
+
+                .button {
+                  width: 50px;
+                  height: 40px;
+                  margin: 2px;
+                  font-size: 18px;
+                  text-align: center;
+                  background-color: #ccc;
+                  border-radius: 5px;
+                  display: inline-block;
+                  color: black;
+                }
+
+                .button:hover {
+                  background-color: #ddd;
+                }
+
+                .button:active {
+                  background-color: #bbb;
+                }
+              </style>
+            
+    <style>
+      /* Dark mode styling for text input areas only */
+      .dark-mode textarea,
+      .dark-mode input[type="text"],
+      .dark-mode input[type="number"],
+      .dark-mode input[type="date"] {
+        background-color: #333;
+        color: white;
+      }
+    </style>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        // Default paragraph in Lorem Ipsum Generator (no duplication)
+        const loremText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed et ante euismod, rhoncus mauris non, facilisis mauris. Praesent in tellus risus. Ut euismod sapien eu tincidunt efficitur.";
+        const loremContainer = document.querySelector("#text");
+        if (loremContainer && loremContainer.children.length === 0) { // Ensure no duplication
+          const defaultPara = document.createElement("p");
+          defaultPara.textContent = loremText;
+          loremContainer.appendChild(defaultPara);
+        }
+
+        // Dark mode toggle for text input areas only
+        const darkModeToggle = document.querySelector(".switch input");
+        darkModeToggle.addEventListener("change", function() {
+          document.body.classList.toggle("dark-mode", darkModeToggle.checked);
+        });
+      });
+    </script>
+    </head>
+    
+            <body>
+              <h1>Calculator</h1>
+              <div class="calculator">
+                <div class="display" id="display"></div>
+                <div>
+                  <button class="button" onclick="clearDisplay()">C</button>
+                  <button class="button" onclick="deleteChar()">&#9003;</button>
+                  <button class="button" onclick="appendChar('/')">/</button>
+                  <button class="button" onclick="appendChar('*')">*</button>
+                </div>
+                <div>
+                  <button class="button" onclick="appendChar('7')">7</button>
+                  <button class="button" onclick="appendChar('8')">8</button>
+                  <button class="button" onclick="appendChar('9')">9</button>
+                  <button class="button" onclick="appendChar('-')">-</button>
+                </div>
+                <div>
+                  <button class="button" onclick="appendChar('4')">4</button>
+                  <button class="button" onclick="appendChar('5')">5</button>
+                  <button class="button" onclick="appendChar('6')">6</button>
+                  <button class="button" onclick="appendChar('+')">+</button>
+                </div>
+                <div>
+                  <button class="button" onclick="appendChar('1')">1</button>
+                  <button class="button" onclick="appendChar('2')">2</button>
+                  <button class="button" onclick="appendChar('3')">3</button>
+                  <button class="button" onclick="appendChar('.')">.</button>
+                </div>
+                <div>
+                  <button class="button" onclick="appendChar('0')">0</button>
+                  <button class="button" onclick="appendChar(',')">,</button>
+                  <button class="button" onclick="calculateResult()">=</button>
+                </div>
+              </div>
+              <script>
+                let display = document.getElementById('display');
+                let input = '';
+
+                function appendChar(char) {
+                  input += char;
+                  updateDisplay();
+                }
+
+                function deleteChar() {
+                  input = input.slice(0, -1);
+                  updateDisplay();
+                }
+
+                function clearDisplay() {
+                  input = '';
+                  updateDisplay();
+                }
+
+                function calculateResult() {
+                  try {
+                    let result = eval(input);
+                    input = result.toLocaleString();
+                  } catch (error) {
+                    input = 'Error';
+                  }
+                  updateDisplay();
+                }
+
+                function updateDisplay() {
+                  display.textContent = input;
+                }
+              </script>
+            </body>
+          
+        </div>
+      </div>
+      <div class="column">
+        <!-- Tile 3: Insert HTML content here -->
+        <div class="tile">
+          
+              <style>
+                body {
+                  background-color: #02529C;
+                }
+
+                body {
+                  font-family: open sans, sans-serif;
+                }
+
+                h1 {
+                  text-align: center;
+                }
+
+                #app {
+                  max-width: 600px;
+                  margin: 0 auto;
+                  padding: 20px;
+                }
+
+                textarea {
+                  display: block;
+                  width: 100%;
+                  height: 200px;
+                  margin-bottom: 10px;
+                  padding: 10px;
+                }
+
+                convertButton {
+                  display: block;
+                  padding: 10px 20px;
+                  background-color: #007bff;
+                  color: white;
+                  border: none;
+                  cursor: pointer;
+                  margin-bottom: 10px;
+                }
+              </style>
+            
+    <style>
+      /* Dark mode styling for text input areas only */
+      .dark-mode textarea,
+      .dark-mode input[type="text"],
+      .dark-mode input[type="number"],
+      .dark-mode input[type="date"] {
+        background-color: #333;
+        color: white;
+      }
+    </style>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        // Default paragraph in Lorem Ipsum Generator (no duplication)
+        const loremText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed et ante euismod, rhoncus mauris non, facilisis mauris. Praesent in tellus risus. Ut euismod sapien eu tincidunt efficitur.";
+        const loremContainer = document.querySelector("#text");
+        if (loremContainer && loremContainer.children.length === 0) { // Ensure no duplication
+          const defaultPara = document.createElement("p");
+          defaultPara.textContent = loremText;
+          loremContainer.appendChild(defaultPara);
+        }
+
+        // Dark mode toggle for text input areas only
+        const darkModeToggle = document.querySelector(".switch input");
+        darkModeToggle.addEventListener("change", function() {
+          document.body.classList.toggle("dark-mode", darkModeToggle.checked);
+        });
+      });
+    </script>
+    </head>
+    
+            <body>
+              <h1>Comma to Line Break Converter</h1>
+              <div id="app">
+                <textarea id="inputTextarea3" placeholder="Enter items separated by commas or line breaks"></textarea>
+                <button id="convertButton">Convert</button>
+                <textarea id="outputTextarea3" placeholder="Converted items will appear here" readonly></textarea>
+              </div>
+              <script>
+                document.getElementById('convertButton').addEventListener('click', function() {
+                  var inputTextarea3 = document.getElementById('inputTextarea3');
+                  var outputTextarea3 = document.getElementById('outputTextarea3');
+                  var input = inputTextarea3.value.trim();
+                  // Check if input is empty
+                  if (input === '') {
+                    alert('Please enter items to convert');
+                    return;
+                  }
+                  // Convert commas to line breaks
+                  if (input.indexOf(',') !== -1) {
+                    var converted = input.replace(/,\s*/g, '\n'); // Update regex to remove spaces after comma
+                    outputTextarea3.value = converted;
+                  }
+                  // Convert line breaks to commas
+                  else if (input.indexOf('\n') !== -1) {
+                    var converted = input.replace(/\n/g, ', ');
+                    outputTextarea3.value = converted;
+                  }
+                  // No conversion needed
+                  else {
+                    alert('Input does not contain commas or line breaks');
+                  }
+                });
+              </script>
+            </body>
+          
+        </div>
+      </div>
+      <div class="column">
+        <!-- Tile 7: Insert HTML content here -->
+        <div class="tile">
+          
+              <style>
+                body {
+                  background-color: #02529C;
+                }
+				
+
+                body {
+                  font-family: open sans, sans-serif;
+                }
+
+                .container {
+                  display: flex;
+                  flex-direction: column;
+                  align-items: center;
+                  margin-top: 100px;
+                }
+
+                input {
+                  width: 200px;
+                  height: 30px;
+                  margin-bottom: 10px;
+                  text-align: center;
+                }
+
+ #firstRowAsHeadersCheckbox {
+    margin: 20px; 
+    width: auto;
+  }
+
+
+                .color-input {
+                  background-color: white;
+                }
+
+                .color-input.valid {
+                  background-color: var(--color);
+                }
+              </style>
+            
+    <style>
+      /* Dark mode styling for text input areas only */
+      .dark-mode textarea,
+      .dark-mode input[type="text"],
+      .dark-mode input[type="number"],
+      .dark-mode input[type="date"] {
+        background-color: #333;
+        color: white;
+      }
+    </style>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        // Default paragraph in Lorem Ipsum Generator (no duplication)
+        const loremText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed et ante euismod, rhoncus mauris non, facilisis mauris. Praesent in tellus risus. Ut euismod sapien eu tincidunt efficitur.";
+        const loremContainer = document.querySelector("#text");
+        if (loremContainer && loremContainer.children.length === 0) { // Ensure no duplication
+          const defaultPara = document.createElement("p");
+          defaultPara.textContent = loremText;
+          loremContainer.appendChild(defaultPara);
+        }
+
+        // Dark mode toggle for text input areas only
+        const darkModeToggle = document.querySelector(".switch input");
+        darkModeToggle.addEventListener("change", function() {
+          document.body.classList.toggle("dark-mode", darkModeToggle.checked);
+        });
+      });
+    </script>
+    </head>
+    
+            <body>
+              <h1>Complementary Color Picker</h1>
+              <h2>Enter a HEX color code into the first box to receive a HEX complementary color code.</h2>
+              <div class="container" style="border-style:none;">
+                <input type="text" id="colorInput" placeholder="Enter a color (HEX)..." pattern="[0-9A-Fa-f]{6}" maxlength="7" class="color-input" />
+                <input type="text" id="complementaryColorInput" value="Complementary color (HEX)..." readonly />
+              </div>
+              <script>
+                // Get input elements
+                const colorInput = document.getElementById('colorInput');
+                const complementaryColorInput = document.getElementById('complementaryColorInput');
+                // Add event listener for color input change
+                colorInput.addEventListener('input', () => {
+                  let enteredColor = colorInput.value;
+                  // If entered color has no "#" symbol, append it to the front
+                  if (!enteredColor.startsWith('#')) {
+                    enteredColor = '#' + enteredColor;
+                    colorInput.value = enteredColor;
+                  }
+                  // Update background color of color input
+                  colorInput.style.backgroundColor = enteredColor;
+                  // Convert HEX color to RGB
+                  const rgbColor = hexToRgb(enteredColor);
+                  // Calculate and update complementary color
+                  const complementaryColor = getComplementaryColor(rgbColor);
+                  complementaryColorInput.value = complementaryColor;
+                  // Update background color of complementary color input
+                  complementaryColorInput.style.backgroundColor = complementaryColor;
+                });
+                // Add event listener for color input keypress
+                colorInput.addEventListener('keypress', (event) => {
+                  // Prevent deletion of "#" symbol
+                  if (event.key === '#' && colorInput.value.length === 0) {
+                    event.preventDefault();
+                  }
+                  // Restrict input to 6-character HEX values
+                  const validChars = /^[0-9A-Fa-f]{1}$/;
+                  if (!validChars.test(event.key)) {
+                    event.preventDefault();
+                  }
+                });
+                // Helper function to convert HEX color to RGB
+                function hexToRgb(hex) {
+                  // Remove '#' from color
+                  hex = hex.replace('#', '');
+                  // Convert color to RGB
+                  const rgb = parseInt(hex, 16);
+                  // Extract RGB components
+                  const r = (rgb >> 16) & 0xFF;
+                  const g = (rgb >> 8) & 0xFF;
+                  const b = rgb & 0xFF;
+                  // Return RGB color as an object
+                  return {
+                    r,
+                    g,
+                    b
+                  };
+                }
+                // Helper function to calculate complementary color
+                function getComplementaryColor(rgbColor) {
+                  // Calculate complementary color
+                  const complementaryR = 255 - rgbColor.r;
+                  const complementaryG = 255 - rgbColor.g;
+                  const complementaryB = 255 - rgbColor.b;
+                  // Convert complementary color to HEX
+                  const complementaryColor = '#' + ((complementaryR << 16) | (complementaryG << 8) | complementaryB).toString(16).padStart(6, '0');
+                  return complementaryColor;
+                }
+                // Helper function to calculate complementary color
+                function getComplementaryColor(rgbColor) {
+                  // Calculate complementary color
+                  const complementaryR = 255 - rgbColor.r;
+                  const complementaryG = 255 - rgbColor.g;
+                  const complementaryB = 255 - rgbColor.b;
+                  // Convert complementary color to HEX
+                  const complementaryColor = '#' + ((complementaryR << 16) | (complementaryG << 8) | complementaryB).toString(16).padStart(6, '0');
+                  return complementaryColor;
+                }
+              </script>
+            </body>
+          
+        </div>
+      </div>
+      <div class="column">
+        <!-- Tile 4: Insert HTML content here -->
+        <div class="tile">
+         
+              <style>
+                body {
+                  background-color: #02529C;
+				  margin: auto;
+                }
+
+                body {
+                  font-family: open sans, sans-serif;
+                }
+			
+                /* Style for result label */
+                #converter_result {
+                  font-size: 24px;
+                  margin-top: 16px;
+                }
+
+                /* Style for select dropdowns */
+input {
+margin: auto;
+margin-bottom: 8px;
+}               
+
+			   select {
+                  font-size: 18px;
+                  margin-bottom: 8px;
+				  margin: auto;
+                }
+              </style>
+            
+    <style>
+      /* Dark mode styling for text input areas only */
+      .dark-mode textarea,
+      .dark-mode input[type="text"],
+      .dark-mode input[type="number"],
+      .dark-mode input[type="date"] {
+        background-color: #333;
+        color: white;
+      }
+    </style>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        // Default paragraph in Lorem Ipsum Generator (no duplication)
+        const loremText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed et ante euismod, rhoncus mauris non, facilisis mauris. Praesent in tellus risus. Ut euismod sapien eu tincidunt efficitur.";
+        const loremContainer = document.querySelector("#text");
+        if (loremContainer && loremContainer.children.length === 0) { // Ensure no duplication
+          const defaultPara = document.createElement("p");
+          defaultPara.textContent = loremText;
+          loremContainer.appendChild(defaultPara);
+        }
+
+        // Dark mode toggle for text input areas only
+        const darkModeToggle = document.querySelector(".switch input");
+        darkModeToggle.addEventListener("change", function() {
+          document.body.classList.toggle("dark-mode", darkModeToggle.checked);
+        });
+      });
+    </script>
+    </head>
+    
+            <body>
+              <h1>Converter (Lengths)</h1>
+              <label for="inputValue">Value to Convert:</label>
+              <input type="number" id="inputValue" />
+              <br>
+              <label for="fromUnit">From Unit:</label>
+              <select id="fromUnit">
+                <option value="inch">Inch (in)</option>
+                <option value="foot">Foot (ft)</option>
+                <option value="yard">Yard (yd)</option>
+                <option value="meter">Meter (m)</option>
+                <option value="cm">Centimeter (cm)</option>
+                <option value="mm">Millimeter (mm)</option>
+                <option value="km">Kilometer (km)</option>
+                <option value="mile">Mile (mi)</option>
+              </select>
+              <br>
+              <label for="toUnit">To Unit:</label>
+              <select id="toUnit">
+                <option value="inch">Inch (in)</option>
+                <option value="foot">Foot (ft)</option>
+                <option value="yard">Yard (yd)</option>
+                <option value="meter">Meter (m)</option>
+                <option value="cm">Centimeter (cm)</option>
+                <option value="mm">Millimeter (mm)</option>
+                <option value="km">Kilometer (km)</option>
+                <option value="mile">Mile (mi)</option>
+              </select>
+              <br>
+              <center><button id="convertBtn" onclick="convert()" style="width: fit-content; height: fit-content;">Convert</button></center>
+              <br>
+              <label id="converter_result" style="color:white;"></label>
+              <script>
+// Conversion table
+var conversionTable = {
+  inch: {
+    foot: 0.0833333,
+    yard: 0.0277778,
+    meter: 0.0254,
+    cm: 2.54,
+    mm: 25.4,
+    km: 0.0000254,
+    mile: 0.0000157828,
+  },
+  foot: {
+    inch: 12,
+    yard: 0.333333,
+    meter: 0.3048,
+    cm: 30.48,
+    mm: 304.8,
+    km: 0.0003048,
+    mile: 0.000189394,
+  },
+  yard: {
+    inch: 36,
+    foot: 3,
+    meter: 0.9144,
+    cm: 91.44,
+    mm: 914.4,
+    km: 0.0009144,
+    mile: 0.000568182,
+  },
+  meter: {
+    inch: 39.3701,
+    foot: 3.28084,
+    yard: 1.09361,
+    cm: 100,
+    mm: 1000,
+    km: 0.001,
+    mile: 0.000621371,
+  },
+  cm: {
+    inch: 0.393701,
+    foot: 0.0328084,
+    yard: 0.0109361,
+    meter: 0.01,
+    mm: 10,
+    km: 0.00001,
+    mile: 0.0000062137,
+  },
+  mm: {
+    inch: 0.0393701,
+    foot: 0.00328084,
+    yard: 0.00109361,
+    meter: 0.001,
+    cm: 0.1,
+    km: 0.000001,
+    mile: 0.00000062137,
+  },
+  km: {
+    inch: 39370.1,
+    foot: 3280.84,
+    yard: 1093.61,
+    meter: 1000,
+    cm: 100000,
+    mm: 1000000,
+    mile: 0.621371,
+  },
+  mile: {
+    inch: 63360,
+    foot: 5280,
+    yard: 1760,
+    meter: 1609.34,
+    cm: 160934,
+    mm: 1609340,
+    km: 1.60934,
+  },
+};
+
+// Function to convert units
+function convert() {
+  var inputValue = document.getElementById("inputValue").value;
+  var fromUnit = document.getElementById("fromUnit").value;
+  var toUnit = document.getElementById("toUnit").value;
+  var resultLabel = document.getElementById("converter_result");
+  if (inputValue === "") {
+    resultLabel.innerHTML = "Please enter a value to convert.";
+    return;
+  }
+  var convertedValue = inputValue * conversionTable[fromUnit][toUnit];
+  convertedValue = convertedValue.toFixed(2); // Round to 2 decimal places...
+  resultLabel.innerHTML = inputValue + " " + fromUnit + " = " + convertedValue + " " + toUnit;
+}
+               
+
+              </script>
+            </body>
+          
+        </div>
+      </div>
+      <div class="column">
+        <!-- Tile 5: Insert HTML content here -->
+        <div class="tile">
+        
+    <style>
+      body {
+        background-color: #02529C;
+        font-family: "Open Sans", sans-serif;
+        color: white;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 10px;
+      }
+
+      input[type="date"] {
+        width: 50%;
+        padding: 8px 16px;
+        margin-bottom: 20px;
+        box-sizing: border-box;
+      }
+
+      button {
+        background-color: #DC1E35;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      #result {
+        margin-top: 20px;
+      }
+    </style>
+  
+    <style>
+      /* Dark mode styling for text input areas only */
+      .dark-mode textarea,
+      .dark-mode input[type="text"],
+      .dark-mode input[type="number"],
+      .dark-mode input[type="date"] {
+        background-color: #333;
+        color: white;
+      }
+    </style>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        // Default paragraph in Lorem Ipsum Generator (no duplication)
+        const loremText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed et ante euismod, rhoncus mauris non, facilisis mauris. Praesent in tellus risus. Ut euismod sapien eu tincidunt efficitur.";
+        const loremContainer = document.querySelector("#text");
+        if (loremContainer && loremContainer.children.length === 0) { // Ensure no duplication
+          const defaultPara = document.createElement("p");
+          defaultPara.textContent = loremText;
+          loremContainer.appendChild(defaultPara);
+        }
+
+        // Dark mode toggle for text input areas only
+        const darkModeToggle = document.querySelector(".switch input");
+        darkModeToggle.addEventListener("change", function() {
+          document.body.classList.toggle("dark-mode", darkModeToggle.checked);
+        });
+      });
+    </script>
+    </head>
+    
+  <body>
+    <h1>Date Difference Calculator</h1>
+    <label for="date1">First Date:</label>
+    <input type="date" id="date1">
+    <label for="date2">Second Date:</label>
+    <input type="date" id="date2"><br>
+    <center><button onclick="calculate()" style="width: fit-content; height: fit-content;">Calculate</button></center>
+    <div id="result"></div>
+    <script>
+      function calculate() {
+        const date1 = new Date(document.getElementById('date1').value);
+        const date2 = new Date(document.getElementById('date2').value);
+        const diffTime = Math.abs(date2 - date1);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        const diffYear = Math.floor(diffDays / 365);
+        const diffMonth = Math.floor((diffDays % 365) / 30);
+        const diffDay = (diffDays % 365) % 30;
+        document.getElementById('result').innerHTML = `${diffYear} years, ${diffMonth} months, ${diffDay} days<br>Total number of days: ${diffDays}`;
+      }
+    </script>
+  </body>
+
+
+        </div>
+      </div>
+    </div>
+    <div class="column">
+
+<!-- Tile 6: Insert HTML content here -->
+<div class="tile">
+
+
+  <style>
+      body {
+        background-color: #02529C;
+        font-family: "Open Sans", sans-serif;
+        color: white;
+      }
+    textarea {
+      width: 300px;
+      height: 150px;
+      padding: 10px;
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+    button {
+      margin: 5px;
+      padding: 8px 12px;
+      font-size: 16px;
+    }
+  </style>
+
+    <style>
+      /* Dark mode styling for text input areas only */
+      .dark-mode textarea,
+      .dark-mode input[type="text"],
+      .dark-mode input[type="number"],
+      .dark-mode input[type="date"] {
+        background-color: #333;
+        color: white;
+      }
+    </style>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        // Default paragraph in Lorem Ipsum Generator (no duplication)
+        const loremText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed et ante euismod, rhoncus mauris non, facilisis mauris. Praesent in tellus risus. Ut euismod sapien eu tincidunt efficitur.";
+        const loremContainer = document.querySelector("#text");
+        if (loremContainer && loremContainer.children.length === 0) { // Ensure no duplication
+          const defaultPara = document.createElement("p");
+          defaultPara.textContent = loremText;
+          loremContainer.appendChild(defaultPara);
+        }
+
+        // Dark mode toggle for text input areas only
+        const darkModeToggle = document.querySelector(".switch input");
+        darkModeToggle.addEventListener("change", function() {
+          document.body.classList.toggle("dark-mode", darkModeToggle.checked);
+        });
+      });
+    </script>
+    </head>
+    
+<body>
+
+  <h1>Duplicate Remover</h1>
+  <textarea id="inputArea" placeholder="Paste your list here, one item per line"></textarea>
+  <div>
+    <button onclick="removeDuplicates()">Remove Duplicates</button>
+    <button onclick="removeDuplicatesCaseInsensitive()">Remove Duplicates (Case Insensitive)</button>
+  </div>
+
+  <script>
+    function removeDuplicates() {
+      const inputArea = document.getElementById('inputArea');
+      const lines = inputArea.value.split('\n').map(line => line.trim());
+      const uniqueLines = [...new Set(lines)]; // Remove duplicates (case-sensitive)
+      inputArea.value = uniqueLines.join('\n'); // Update textarea with unique lines
+    }
+
+    function removeDuplicatesCaseInsensitive() {
+      const inputArea = document.getElementById('inputArea');
+      const lines = inputArea.value.split('\n').map(line => line.trim());
+      
+      // Use a Map to track unique lines in a case-insensitive way
+      const uniqueMap = new Map();
+      lines.forEach(line => {
+        const lowerCaseLine = line.toLowerCase();
+        if (!uniqueMap.has(lowerCaseLine)) {
+          uniqueMap.set(lowerCaseLine, line); // Map lower case version to original case
+        }
+      });
+      
+      // Get unique lines preserving the original case
+      const uniqueLines = Array.from(uniqueMap.values());
+      inputArea.value = uniqueLines.join('\n'); // Update textarea with unique lines
+    }
+  </script>
+
+</body>
+
+
+        </div>
+      </div>
+    </div>
+    <div class="column">
+
+
+
+      <!-- Tile 6b: Insert HTML content here -->
+      <div class="tile">
+       
+            <style>
+              body {
+                background-color: #02529C;
+              }
+
+              body {
+                font-family: open sans, sans-serif;
+              }
+
+              #text {
+                color: white;
+                text-size: .8em;
+                text-align: left;
+              }
+            </style>
+          
+    <style>
+      /* Dark mode styling for text input areas only */
+      .dark-mode textarea,
+      .dark-mode input[type="text"],
+      .dark-mode input[type="number"],
+      .dark-mode input[type="date"] {
+        background-color: #333;
+        color: white;
+      }
+    </style>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        // Default paragraph in Lorem Ipsum Generator (no duplication)
+        const loremText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed et ante euismod, rhoncus mauris non, facilisis mauris. Praesent in tellus risus. Ut euismod sapien eu tincidunt efficitur.";
+        const loremContainer = document.querySelector("#text");
+        if (loremContainer && loremContainer.children.length === 0) { // Ensure no duplication
+          const defaultPara = document.createElement("p");
+          defaultPara.textContent = loremText;
+          loremContainer.appendChild(defaultPara);
+        }
+
+        // Dark mode toggle for text input areas only
+        const darkModeToggle = document.querySelector(".switch input");
+        darkModeToggle.addEventListener("change", function() {
+          document.body.classList.toggle("dark-mode", darkModeToggle.checked);
+        });
+      });
+    </script>
+    </head>
+    
+          <body>
+            <h1>Lorem Ipsum Generator</h1>
+            <h2>Generate up to 5 paragraphs (press button repeatedly).</h2>
+            <center><button id="generateBtn" style="width: fit-content; height: fit-content;">Generate</button>
+            <button id="clearBtn" style="width: fit-content; height: fit-content;">Clear</button></center>
+            <div id="text"></div>
+            <script>
+              const paragraphs = ["Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed et ante euismod, rhoncus mauris non, facilisis mauris. Praesent in tellus risus. Ut euismod sapien eu tincidunt efficitur.", "Donec sit amet semper velit. Nulla tincidunt luctus porttitor. Nam vitae ante quis ipsum tincidunt sagittis. Suspendisse potenti. In porttitor lectus nibh, ut venenatis purus commodo a. ", "Etiam vestibulum luctus urna eu mollis. Aliquam vitae purus vitae mi efficitur dignissim eu ac risus. Fusce facilisis enim vel faucibus interdum.", "Praesent consequat turpis a risus elementum vestibulum. Quisque vehicula augue et diam suscipit aliquet. Fusce euismod diam vel eros euismod, a lacinia mauris sagittis.", "Curabitur posuere ante non lacus consectetur, at blandit enim vestibulum. Suspendisse ornare urna eu blandit finibus. Maecenas interdum tellus id posuere lacinia."];
+              const generateBtn = document.querySelector("#generateBtn");
+              const clearBtn = document.querySelector("#clearBtn");
+              const text = document.querySelector("#text");
+              let count = 0;
+              generateBtn.addEventListener("click", () => {
+                if (count >= 5) {
+                  return;
+                }
+                const paragraph = paragraphs[count];
+                const p = document.createElement("p");
+                p.textContent = paragraph;
+                text.appendChild(p);
+                count++;
+                clearBtn.style.display = "inline";
+              });
+              clearBtn.addEventListener("click", () => {
+                text.innerHTML = "";
+                count = 0;
+                clearBtn.style.display = "none";
+              });
+            </script>
+          </body>
+        
+      </div>
+    </div>
+    </div>
+    <div class="column">
+      <!-- Tile 8: Insert HTML content here -->
+      <div class="tile">
+       
+            <style>
+              body {
+                background-color: #02529C;
+              }
+
+              h1 {
+                margin-bottom: 20px;
+              }
+
+              body {
+                font-family: open sans, sans-serif;
+              }
+
+              /* CSS styles for the QR code generator */
+              .container {
+                max-width: 400px;
+                margin: 0 auto;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+              }
+
+              #qrCode {
+                margin-top: 20px;
+                margin-bottom: 20px;
+              }
+
+              .center {
+                text-align: center;
+                margin-top: 20px;
+              }
+            </style>
+          
+    <style>
+      /* Dark mode styling for text input areas only */
+      .dark-mode textarea,
+      .dark-mode input[type="text"],
+      .dark-mode input[type="number"],
+      .dark-mode input[type="date"] {
+        background-color: #333;
+        color: white;
+      }
+    </style>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        // Default paragraph in Lorem Ipsum Generator (no duplication)
+        const loremText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed et ante euismod, rhoncus mauris non, facilisis mauris. Praesent in tellus risus. Ut euismod sapien eu tincidunt efficitur.";
+        const loremContainer = document.querySelector("#text");
+        if (loremContainer && loremContainer.children.length === 0) { // Ensure no duplication
+          const defaultPara = document.createElement("p");
+          defaultPara.textContent = loremText;
+          loremContainer.appendChild(defaultPara);
+        }
+
+        // Dark mode toggle for text input areas only
+        const darkModeToggle = document.querySelector(".switch input");
+        darkModeToggle.addEventListener("change", function() {
+          document.body.classList.toggle("dark-mode", darkModeToggle.checked);
+        });
+      });
+    </script>
+    </head>
+    
+          <body>
+            <div class="container" style="border-style:none;">
+              <h1>QR Code Generator</h1>
+              <label for="textInput">Enter text or URL:</label>
+              <input type="text" id="textInput" placeholder="Enter text or URL">
+              <div class="center">
+                <button onclick="generateQRCode()">Generate QR Code</button>
+              </div>
+              <div id="qrCode"></div>
+            </div>
+            <script src="https://davidshimjs.github.io/qrcodejs/qrcode.min.js"></script>
+            <script>
+              // JavaScript code for generating QR code using QRCode.js library
+              function generateQRCode() {
+                var text = document.getElementById('textInput').value;
+                if (text !== '') {
+                  var qrCodeDiv = document.getElementById('qrCode');
+                  qrCodeDiv.innerHTML = ''; // Clear previous QR code
+                  // Generate QR code using QRCode.js library
+                  var qrcode = new QRCode(qrCodeDiv, {
+                    text: text,
+                    width: 256,
+                    height: 256,
+                    colorDark: "#000000",
+                    colorLight: "#ffffff",
+                    correctLevel: QRCode.CorrectLevel.H
+                  });
+                }
+              }
+            </script>
+          </body>
+        
+      </div>
+    </div>
+
+ <div class="column">
+      <!-- Tile 9: Insert HTML content here -->
+      <div class="tile">
+      
+            <style>
+              body {
+                background-color: #02529C;
+              }
+
+              body {
+                font-family: open sans, sans-serif;
+                text-align: center;
+                color: white;
+              }
+
+              label {
+                display: block;
+                margin-bottom: 10px;
+              }
+            </style>
+          
+    <style>
+      /* Dark mode styling for text input areas only */
+      .dark-mode textarea,
+      .dark-mode input[type="text"],
+      .dark-mode input[type="number"],
+      .dark-mode input[type="date"] {
+        background-color: #333;
+        color: white;
+      }
+    </style>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        // Default paragraph in Lorem Ipsum Generator (no duplication)
+        const loremText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed et ante euismod, rhoncus mauris non, facilisis mauris. Praesent in tellus risus. Ut euismod sapien eu tincidunt efficitur.";
+        const loremContainer = document.querySelector("#text");
+        if (loremContainer && loremContainer.children.length === 0) { // Ensure no duplication
+          const defaultPara = document.createElement("p");
+          defaultPara.textContent = loremText;
+          loremContainer.appendChild(defaultPara);
+        }
+
+        // Dark mode toggle for text input areas only
+        const darkModeToggle = document.querySelector(".switch input");
+        darkModeToggle.addEventListener("change", function() {
+          document.body.classList.toggle("dark-mode", darkModeToggle.checked);
+        });
+      });
+    </script>
+    </head>
+    
+          <body>
+            <h1>Random Number Generator</h1>
+            <form>
+              <label for="min">Min:</label>
+              <input type="number" id="min" name="min" min="0" max="100" value="1">
+              <label for="max">Max:</label>
+              <input type="number" id="max" name="max" min="0" max="100" value="100">
+              <br>
+              <button type="button" onclick="generateRandomNumber()">Random</button>
+            </form>
+            <p id="result3"></p>
+            <script>
+              function generateRandomNumber() {
+                var min = parseInt(document.getElementById("min").value);
+                var max = parseInt(document.getElementById("max").value);
+                var randomNumber = Math.floor(Math.random() * (max - min + 1) + min);
+                document.getElementById("result3").innerHTML = "Random Number: " + randomNumber;
+              }
+            </script>
+          </body>
+        
+      </div>
+    </div>
+
+    <div class="column">
+      <!-- Tile 10: Insert HTML content here -->
+      <div class="tile">
+      
+            <style>
+              body {
+                background-color: #02529C;
+              }
+
+              body {
+                font-family: open sans, sans-serif;
+                background: white;
+              }
+
+              h1 {
+                text-align: center;
+                /* Centered header */
+              }
+
+              #inputContainer {
+                margin: 20px auto;
+                width: 90%;
+              }
+
+              #inputTextArea {
+                width: 100%;
+                height: 200px;
+                resize: none;
+                font-size: 16px;
+                padding: 10px;
+              }
+
+              #selectButton {
+                display: block;
+                margin: 20px auto;
+                padding: 10px;
+                font-size: 16px;
+                text-align: center;
+                cursor: pointer;
+              }
+
+              #selectedValueContainer {
+                margin-top: 20px;
+                text-align: center;
+              }
+            </style>
+          
+    <style>
+      /* Dark mode styling for text input areas only */
+      .dark-mode textarea,
+      .dark-mode input[type="text"],
+      .dark-mode input[type="number"],
+      .dark-mode input[type="date"] {
+        background-color: #333;
+        color: white;
+      }
+    </style>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        // Default paragraph in Lorem Ipsum Generator (no duplication)
+        const loremText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed et ante euismod, rhoncus mauris non, facilisis mauris. Praesent in tellus risus. Ut euismod sapien eu tincidunt efficitur.";
+        const loremContainer = document.querySelector("#text");
+        if (loremContainer && loremContainer.children.length === 0) { // Ensure no duplication
+          const defaultPara = document.createElement("p");
+          defaultPara.textContent = loremText;
+          loremContainer.appendChild(defaultPara);
+        }
+
+        // Dark mode toggle for text input areas only
+        const darkModeToggle = document.querySelector(".switch input");
+        darkModeToggle.addEventListener("change", function() {
+          document.body.classList.toggle("dark-mode", darkModeToggle.checked);
+        });
+      });
+    </script>
+    </head>
+    
+          <body>
+            <h1>Random Value Selector</h1>
+            <div id="inputContainer">
+              <textarea id="inputTextArea" placeholder="Paste a list of up to 100 values separated by linebreaks or commas"></textarea>
+            </div>
+            <button id="selectButton" style="width: fit-content; height: fit-content;">Randomly Select</button>
+            <div id="selectedValueContainer"></div>
+            <script>
+              document.getElementById('selectButton').addEventListener('click', function() {
+                var inputTextArea = document.getElementById('inputTextArea');
+                var selectedValueContainer = document.getElementById('selectedValueContainer');
+                selectedValueContainer.textContent = '';
+                var values = inputTextArea.value.trim().split(/[\n,]+/); // Split input values by linebreaks or commas
+                if (values.length > 0) {
+                  var randomIndex = Math.floor(Math.random() * values.length); // Generate random index
+                  var selectedValue = values[randomIndex]; // Get randomly selected value
+                  if (selectedValue) {
+                    selectedValueContainer.textContent = 'Randomly Selected Value: ' + selectedValue;
+                  }
+                }
+              });
+            </script>
+          </body>
+        
+      </div>
+    </div>
+    </div>
+   
+
+
+    <div class="column">
+      <!-- Tile 11: Insert HTML content here -->
+      <div class="tile">
+     
+    <style>
+      body {
+        background-color: #02529C;
+        font-family: open sans, sans-serif;
+      }
+
+      /* Style for the input textarea, output textarea, and table preview */
+      #inputTextarea,
+      #outputTextarea,
+      #tablePreview {
+        width: 90%;
+        margin: auto
+      }
+
+      /* Style for the output textarea */
+      #outputTextarea {
+        height: 100px;
+        white-space: pre;
+      }
+
+      /* Style for the table preview */
+      #tablePreview {
+        margin-top: 20px;
+        border-collapse: collapse;
+        border: 1px solid white;
+      }
+
+      #tablePreview th,
+      #tablePreview td {
+        border: 1px solid white;
+        padding: 4px;
+      }
+    </style>
+  
+    <style>
+      /* Dark mode styling for text input areas only */
+      .dark-mode textarea,
+      .dark-mode input[type="text"],
+      .dark-mode input[type="number"],
+      .dark-mode input[type="date"] {
+        background-color: #333;
+        color: white;
+      }
+    </style>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        // Default paragraph in Lorem Ipsum Generator (no duplication)
+        const loremText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed et ante euismod, rhoncus mauris non, facilisis mauris. Praesent in tellus risus. Ut euismod sapien eu tincidunt efficitur.";
+        const loremContainer = document.querySelector("#text");
+        if (loremContainer && loremContainer.children.length === 0) { // Ensure no duplication
+          const defaultPara = document.createElement("p");
+          defaultPara.textContent = loremText;
+          loremContainer.appendChild(defaultPara);
+        }
+
+        // Dark mode toggle for text input areas only
+        const darkModeToggle = document.querySelector(".switch input");
+        darkModeToggle.addEventListener("change", function() {
+          document.body.classList.toggle("dark-mode", darkModeToggle.checked);
+        });
+      });
+    </script>
+    </head>
+    
+  <body>
+    <h1>Spreadsheet to HTML Table Converter</h1>
+    <label>
+    <input type="checkbox" id="firstRowAsHeadersCheckbox">First Row as Headers 
+    </label>
+    <br>
+    <textarea id="inputTextarea" rows="10" cols="50"></textarea>
+    <br>
+    <center><button id="convertBtn2" style="width: fit-content; height: fit-content;">Convert</button></center>
+    <textarea id="outputTextarea" rows="10" cols="50"></textarea>
+    <table id="tablePreview"></table>
+    <script>
+      document.getElementById('convertBtn2').addEventListener('click', function() {
+        var inputText = document.getElementById('inputTextarea').value;
+        var firstRowAsHeaders = document.getElementById('firstRowAsHeadersCheckbox').checked;
+        var tableHtml = '<table style="border-collapse: collapse; border: 1px solid white;">';
+        var rows = inputText.split('\n');
+        for (var i = 0; i < rows.length; i++) {
+          if (rows[i].trim() === '') continue; // Skip blank lines
+          tableHtml += '\n   <tr>';
+          var cells = rows[i].split('\t');
+          for (var j = 0; j < cells.length; j++) {
+            var cellTag = i === 0 && firstRowAsHeaders ? 'th' : 'td';
+            var cellHtml = '\n    <' + cellTag + ' style="border: 1px solid white; padding: 4px;">' + cells[j].replace(/\t/g, '&nbsp;&nbsp;&nbsp;&nbsp;') + '</' + cellTag + '>';
+            tableHtml += cellHtml;
+          }
+          tableHtml += '\n   </tr>';
+        }
+        tableHtml += '\n </table>';
+        document.getElementById('outputTextarea').value = tableHtml;
+        document.getElementById('tablePreview').innerHTML = tableHtml;
+      });
+    </script>
+  </body>
+
+
+      </div>
+    </div>
+    <div class="column">
+      <!-- Tile 12:Insert HTML content here -->
+      <div class="tile">
+      
+            <style>
+              body {
+                background-color: #02529C;
+              }
+
+              body {
+                font-family: open sans, sans-serif;
+              }
+
+/* Affect CtLB converter textbox */
+              textarea {
+                width: 90%;
+                height: 100px;
+                resize: vertical;
+                margin: auto;
+              }
+
+              button {
+                margin-top: 10px;
+				margin-bottom: 10px;
+              }
+            </style>
+            <script>
+              function countCharsAndWords() {
+                // Get the input value
+                var input = document.getElementById("text-input").value;
+                // Count the characters
+                var charCount = input.length;
+                // Count the words
+                var wordCount = input.match(/\S+/g)?.length || 0;
+                // Display the results
+                document.getElementById("char-count").innerHTML = "Character count: " + charCount;
+                document.getElementById("word-count").innerHTML = "Word count: " + wordCount;
+              }
+            </script>
+          
+    <style>
+      /* Dark mode styling for text input areas only */
+      .dark-mode textarea,
+      .dark-mode input[type="text"],
+      .dark-mode input[type="number"],
+      .dark-mode input[type="date"] {
+        background-color: #333;
+        color: white;
+      }
+    </style>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        // Default paragraph in Lorem Ipsum Generator (no duplication)
+        const loremText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed et ante euismod, rhoncus mauris non, facilisis mauris. Praesent in tellus risus. Ut euismod sapien eu tincidunt efficitur.";
+        const loremContainer = document.querySelector("#text");
+        if (loremContainer && loremContainer.children.length === 0) { // Ensure no duplication
+          const defaultPara = document.createElement("p");
+          defaultPara.textContent = loremText;
+          loremContainer.appendChild(defaultPara);
+        }
+
+        // Dark mode toggle for text input areas only
+        const darkModeToggle = document.querySelector(".switch input");
+        darkModeToggle.addEventListener("change", function() {
+          document.body.classList.toggle("dark-mode", darkModeToggle.checked);
+        });
+      });
+    </script>
+    </head>
+    
+          <body>
+            <h1>Word & Character Counter</h1>
+            <textarea id="text-input" placeholder="Enter text here"></textarea>
+            <center><button onclick="countCharsAndWords()" style="width: fit-content; height: fit-content;">Count</button></center>
+            <p id="char-count"></p>
+            <p id="word-count"></p>
+          </body>
+        
+      </div>
+    </div>
+    </div><div class="row">
+      <div class="column">
+</div></div>
+  </body>
+</div></div><h1 class="fancy2">Did you find this page useful?</h1>
+  <h1 class="fancy2">
+    <a href="https://www.buymeacoffee.com/verkassi" target="_blank" style="color:white;">Buy me a ☕</a>
+  </h1>
+<!-- Start of CuterCounter Code -->
+<a href="http://www.cutercounter.com/" target="_blank"><img src="https://www.cutercounter.com/hits.php?id=hxnxocx&nd=6&style=16" border="0" alt="visitor counter"></a>
+<!-- End of CuterCounter Code -->
+</a>
+</html>
+

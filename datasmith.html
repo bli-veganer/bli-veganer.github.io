@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="description" content="datasmith lets you create small, medium, or huge datasets that you can copy and paste or export as a CSV file. No ads, no tracking, no signup, no BS.">
+    <meta name="keywords" content="data generator, mock data, random data, dummy data, CSV">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>datasmith</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #ffffff;
+      margin: 0;
+      padding: 0;
+      color: #000000;
+    }
+
+    .container {
+      margin: 20px auto;
+      background-color: #ffffff;
+      border-radius: 5px;
+      padding: 20px;
+      max-width: fit-content;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    /* Add padding to the top of specific labels */
+    label[for="numRows"],
+    label[for="dataType"] {
+      padding-top: 10px;
+    }
+
+    input[type="number"],
+    select {
+      padding: 5px;
+      font-size: 14px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .error {
+      color: orange;
+      font-weight: bold;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 14px;
+      background-color: #4CAF50;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-top: 20px;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #4CAF50;
+      color: #fff;
+    }
+
+    /* Dark Mode */
+    body.dark-mode {
+      background-color: #222222;
+      color: #ffffff;
+    }
+
+    body.dark-mode .container {
+      background-color: #222222;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>datasmith</h1>
+<h3><i>No ads, no tracking, no signup, no BS.</i></h3>
+    <label for="numColumns">Number of Columns:</label>
+    <input type="number" id="numColumns" min="1" max="999" value="10">
+    <br>
+    <label for="numRows" style="padding-top: 10px;">Number of Rows:</label>
+    <input type="number" id="numRows" min="1" max="999" value="10">
+    <br>
+    <label for="dataType" style="padding-top: 10px;">Data Type:</label>
+    <select id="dataType">
+      <option value="plainText">Plain Text</option>
+      <option value="integer">Integer</option>
+      <option value="float">Float</option>
+      <option value="date">Date</option>
+      <option value="dateTime">Date Time</option>
+<option value="mixed">Mixed</option>
+    </select>
+    <br>
+    <label for="showHeaders">
+      <input type="checkbox" id="showHeaders" checked> Show Column Headers
+    </label>
+    <br>
+    <label for="darkMode">
+      <input type="checkbox" id="darkMode" onchange="toggleDarkMode()"> Dark Mode
+    </label>
+    <br>
+    <button onclick="generateTable()">Generate</button>
+    <button onclick="exportTableToCSV()">Export as CSV</button>
+    <br>
+    <div id="tableContainer">
+      <table id="dataTable"></table><br><p style="color:orange; font-weight:bold;"<i>NOTE: Using over 1000 rows or 1000 columns means that the resultant CSV file can be quite large and will take a while to download. But... go for it!<br><br>When there are more than 50 columns or 100 rows, the table is hidden on the page for display purposes. However, you can still export the table as a CSV.</i>
+    </div>
+    <div id="errorContainer"></div>
+  </div>
+
+  <script>
+function toggleDarkMode() {
+  var body = document.body;
+  body.classList.toggle("dark-mode");
+}
+
+
+function generateTable() {
+  var numColumns = parseInt(document.getElementById("numColumns").value);
+  var numRows = parseInt(document.getElementById("numRows").value);
+  var dataType = document.getElementById("dataType").value;
+  var showHeaders = document.getElementById("showHeaders").checked;
+  var errorContainer = document.getElementById("errorContainer");
+  errorContainer.textContent = ""; // Clear previous error message
+
+  if (numColumns > 50 || numRows > 100) {
+    // Display error message
+    var errorMessage = document.createElement("p");
+    errorMessage.textContent = "";
+    errorMessage.classList.add("error");
+    errorContainer.appendChild(errorMessage);
+
+    // Apply 'hidden' attribute to the table
+    var dataTable = document.getElementById("dataTable");
+    dataTable.innerHTML = ""; // Clear previous table
+    dataTable.setAttribute("hidden", true);
+  } else {
+    var dataTable = document.getElementById("dataTable");
+    dataTable.innerHTML = ""; // Clear previous table
+    dataTable.removeAttribute("hidden"); // Remove 'hidden' attribute if present
+
+    if (showHeaders) {
+      // Create table header
+      var headerRow = document.createElement("tr");
+      for (var i = 1; i <= numColumns; i++) {
+        var headerCell = document.createElement("th");
+        headerCell.textContent = "Column" + i;
+        headerRow.appendChild(headerCell);
+      }
+      dataTable.appendChild(headerRow);
+    }
+
+    // Create table rows with dummy data
+    for (var j = 1; j <= numRows; j++) {
+      var row = document.createElement("tr");
+      for (var k = 1; k <= numColumns; k++) {
+        var cell = document.createElement("td");
+        if (dataType === "plainText") {
+          cell.textContent = generateRandomText();
+        } else if (dataType === "integer") {
+          cell.textContent = generateRandomInteger();
+        } else if (dataType === "float") {
+          cell.textContent = generateRandomFloat();
+        } else if (dataType === "date") {
+          cell.textContent = generateRandomDate();
+        } else if (dataType === "dateTime") {
+          cell.textContent = generateRandomDateTime();
+        } else if (dataType === "mixed") {
+          cell.textContent = generateMixedDataType(k); // Pass the column number to generate a specific subtype
+        }
+        row.appendChild(cell);
+      }
+      dataTable.appendChild(row);
+    }
+
+    // Center align the table
+    dataTable.style.textAlign = "center";
+
+    // Adjust container size to fit the table
+    var tableContainer = document.getElementById("tableContainer");
+    tableContainer.style.width = "fit-content";
+  }
+}
+
+function generateRandomText() {
+  var text = "";
+  var possibleChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+  var length = Math.floor(Math.random() * 9) + 2; // Random text length between 2 and 10 characters
+
+  for (var i = 0; i < length; i++) {
+    text += possibleChars.charAt(Math.floor(Math.random() * possibleChars.length));
+  }
+  return text;
+}
+
+function generateRandomInteger() {
+  return Math.floor(Math.random() * 1000);
+}
+
+function generateRandomFloat() {
+  return parseFloat((Math.random() * 1000).toFixed(3));
+}
+
+function generateRandomDate() {
+  var startDate = new Date(1900, 0, 1).getTime(); // Start date in milliseconds since Jan 1, 1900
+  var currentDate = new Date().getTime(); // Current date in milliseconds
+  var randomDate = new Date(startDate + Math.random() * (currentDate - startDate));
+    var year = randomDate.getFullYear();
+  var month = ("0" + (randomDate.getMonth() + 1)).slice(-2); // Add leading zero for single-digit months
+  var day = ("0" + randomDate.getDate()).slice(-2); // Add leading zero for single-digit days
+  return year + "-" + month + "-" + day;
+}
+
+function generateRandomDateTime() {
+  var startDate = new Date(1900, 0, 1).getTime(); // Start date in milliseconds since Jan 1, 1900
+  var currentDate = new Date().getTime(); // Current date in milliseconds
+  var randomDateTime = new Date(startDate + Math.random() * (currentDate - startDate));
+
+  var year = randomDateTime.getFullYear();
+  var month = ("0" + (randomDateTime.getMonth() + 1)).slice(-2); // Add leading zero for single-digit months
+  var day = ("0" + randomDateTime.getDate()).slice(-2); // Add leading zero for single-digit days
+  var hours = ("0" + randomDateTime.getHours()).slice(-2); // Add leading zero for single-digit hours
+  var minutes = ("0" + randomDateTime.getMinutes()).slice(-2); // Add leading zero for single-digit minutes
+  var seconds = ("0" + randomDateTime.getSeconds()).slice(-2); // Add leading zero for single-digit seconds
+  return year + "-" + month + "-" + day + " " + hours + ":" + minutes + ":" + seconds;
+}
+
+function generateMixedDataType(columnNumber) {
+  // Define an array of subtypes
+  var subtypes = ["plainText", "integer", "float", "date", "dateTime"];
+
+  // Select a random subtype based on the column number
+  var selectedSubtype = subtypes[columnNumber % subtypes.length];
+
+  // Generate and return data based on the selected subtype
+  if (selectedSubtype === "plainText") {
+    return generateRandomText();
+  } else if (selectedSubtype === "integer") {
+    return generateRandomInteger();
+  } else if (selectedSubtype === "float") {
+    return generateRandomFloat();
+  } else if (selectedSubtype === "date") {
+    return generateRandomDate();
+  } else if (selectedSubtype === "dateTime") {
+    return generateRandomDateTime();
+  }
+}
+
+function exportTableToCSV() {
+  var numColumns = parseInt(document.getElementById("numColumns").value);
+  var numRows = parseInt(document.getElementById("numRows").value);
+  var dataType = document.getElementById("dataType").value;
+  var showHeaders = document.getElementById("showHeaders").checked;
+
+  var csvContent = "data:text/csv;charset=utf-8,";
+
+  if (showHeaders) {
+    var headerRow = [];
+    for (var i = 1; i <= numColumns; i++) {
+      headerRow.push("Column" + i);
+    }
+    csvContent += headerRow.join(",") + "\n";
+  }
+
+  // Generate CSV rows with dummy data
+  for (var j = 1; j <= numRows; j++) {
+    var rowData = [];
+    for (var k = 1; k <= numColumns; k++) {
+      var data;
+      if (dataType === "plainText") {
+        data = generateRandomText();
+      } else if (dataType === "integer") {
+        data = generateRandomInteger();
+      } else if (dataType === "float") {
+        data = generateRandomFloat();
+      } else if (dataType === "date") {
+        data = generateRandomDate();
+      } else if (dataType === "dateTime") {
+        data = generateRandomDateTime();
+      } else if (dataType === "mixed") {
+        data = generateMixedDataType(k);
+      }
+      rowData.push(data);
+    }
+    csvContent += rowData.join(",") + "\n";
+  }
+
+  var encodedURI = encodeURI(csvContent);
+  var link = document.createElement("a");
+  link.setAttribute("href", encodedURI);
+  link.setAttribute("download", "table.csv");
+  link.style.display = "none";
+
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+
+
+  </script>
+<div class="container"><h2>More useful tools with no BS back at <a href="https://www.verkassi.com" target="_blank" style="color:blue;">verkassi.com</a></h2>
+
+<p>Did you find this page useful? 
+    <a href="https://www.buymeacoffee.com/verkassi" target="_blank" style="color:blue;">Buy me a ☕</a>
+
+  <!-- Start of CuterCounter Code -->
+<p align="center"><a href="https://www.cutercounter.com/" target="_blank"><img src="https://www.cutercounter.com/hits.php?id=hmmxnafad&nd=6&style=16" border="0" alt="best free website hit counter"></a>
+<!-- End of CuterCounter Code --></div>
+
+</body>
+</html>
+
+
