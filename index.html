@@ -178,6 +178,7 @@ input:checked + .slider:before {
     color: #fff;
   }
 
+
 .dark-mode .AClabel, 
 .dark-mode select {
   background-color: #444;
@@ -296,6 +297,9 @@ input:checked + .slider:before {
                   font-family: open sans;
                   text-align: center;
                   color: white;
+				  
+				  
+
               </style>
             
     <style>
@@ -307,6 +311,45 @@ input:checked + .slider:before {
         background-color: #333;
         color: white;
       }
+	  
+	  
+	  
+/* Dark mode for Area Calculator */
+.dark-mode .calculator {
+  background-color: #444; /* Darker background for the calculator container */
+  color: white; /* Text color */
+}
+
+.dark-mode .calculator .input {
+  background-color: #333; /* Input fields */
+  color: white;
+  border: 1px solid #555; /* Optional: Darker border */
+}
+
+
+
+/* Dark mode for Calculator applet */
+.dark-mode .calculator .display {
+  background-color: #333; /* Display background */
+  color: white; /* Display text color */
+}
+
+.dark-mode .calculator .button {
+  background-color: #555; /* Buttons background */
+  color: white;
+}
+
+.dark-mode .calculator .button:hover {
+  background-color: #777; /* Button hover effect */
+}
+
+
+.dark-mode #circleResult,
+.dark-mode #rectangleResult {
+  color: white; /* Change text color to white in dark mode */
+}
+
+
     </style>
 
 
@@ -316,20 +359,20 @@ input:checked + .slider:before {
               <h1>Area Calculator</h1>
               <div class="calculator">
                 <div class="input-group">
-                  <label class="AClabel">Radius of Circle:</label>
+                  <label class="AClabel" style="margin-top: -10px; margin-bottom: 0px;">Radius of Circle:</label>
                   <input class="input" type="number" id="radius" step="0.01">
                   <button class="buttonAC" onclick="calculateCircleArea()">Calculate Circle</button>
-                  <div class="result" style="color:black;" id="circleResult"></div>
+                  <div class="result" id="circleResult"></div>
                 </div>
                 <div class="input-group">
-                  <label class="AClabel">Length of Rectangle:</label>
+                  <label class="AClabel" style="margin-top: -10px; margin-bottom: 0px;">Length of Rectangle:</label>
                   <input class="input" type="number" id="length" step="0.01">
                 </div>
                 <div class="input-group">
-                  <label class="AClabel">Width of Rectangle:</label>
+                  <label class="AClabel" style="margin-top: -10px; margin-bottom: 0px;">Width of Rectangle:</label>
                   <input class="input" type="number" id="width" step="0.01">
                   <button class="buttonAC" onclick="calculateRectangleArea()">Calculate Rectangle</button>
-                  <div class="result" style="color:black;" id="rectangleResult"></div>
+                  <div class="result" id="rectangleResult"></div>
                 </div>
               </div>
               <script>
@@ -1147,7 +1190,18 @@ function convert() {
     count = 1; // Reset count to 1 to reflect the default paragraph
     clearBtn.style.display = "none";
   });
+  
+  
+  
 </script>
+
+<!-- dark mode toggle -->
+<script>
+  document.querySelector('.switch input').addEventListener('change', function () {
+    document.body.classList.toggle('dark-mode', this.checked);
+  });
+</script>
+
 
           </body>
         
@@ -1551,7 +1605,7 @@ function convert() {
   <h1 class="fancy2">
     <a href="https://www.buymeacoffee.com/verkassi" target="_blank" style="color:white;">Buy me a ☕</a>
   </h1>
-<!-- hit counter -->
+<!-- footer text -->
 <p style="font-size: 12px;">Visits to this website are counted using the open-source, privacy-focused <a href="https://umami.is/" class="footerlink">umami</a> platform.</p>
 
 </a>
